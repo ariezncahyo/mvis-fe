@@ -16,13 +16,12 @@ export function* loginSaga(
 ): SagaIterator {
   try {
     yield put(loadingActions.startLoadingAction(action.type));
-    const data = yield call(login, action.payload);
-    const { result } = data;
+    const { data, success } = yield call(login, action.payload);
     const userData = {
-      isLogin: data?.success === true,
-      data: result
+      isLogin: success === true,
+      data
     }
-    window.localStorage.setItem("LOCAL_USER_KEY", JSON.stringify(result));
+    window.localStorage.setItem("LOCAL_USER_KEY", JSON.stringify(data));
     yield put(authActions.loginSucceded(userData));
     toast.success(data.message);
   } catch {}

@@ -9,12 +9,13 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 
 const LoginPage = React.lazy(()=> import('@/pages/Login'));
+const RegisterPage = React.lazy(()=> import('@/pages/Register'));
 const DashboardPage = React.lazy(()=> import('@/pages/Dashboard'));
 
 const PublicRouter = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/login" element={<LoginPage/>} />
-    <Route path="/forgot-password" element={<LoginPage/>} />
+    <Route path="/register" element={<RegisterPage/>} />
     <Route path="*" element={<Navigate replace to="/login" />} />
   </>
 ));
