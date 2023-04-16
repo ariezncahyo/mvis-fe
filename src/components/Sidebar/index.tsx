@@ -59,7 +59,7 @@ const Sidebar: React.FC<ISidebar> = ({ sidebar, setSidebar }: ISidebar): ReactEl
                 <div className="flex flex-col pt-2" key={index}>
                   <div
                     key={index}
-                    className="flex w-ful hover:bg-orange-200 active:bg-orange-200 rounded py-1 cursor-pointer"
+                    className="flex w-ful hover:bg-primary-200 active:bg-orange-200 rounded py-1 cursor-pointer"
                   >
                     <div className="w-full flex justify-between gap-3 mx-2">
                       <div className="place-items-center m-auto ml-0 mr-0">{icon}</div>
@@ -95,7 +95,7 @@ const Sidebar: React.FC<ISidebar> = ({ sidebar, setSidebar }: ISidebar): ReactEl
 
           <div className="place-items-end m-auto mb-4 w-full rounded px-2 py-1">
             <div
-              className="flex flex-row gap-2 place-items-center m-auto cursor-pointer hover:bg-orange-200 px-2 py-1 rounded-md"
+              className="flex flex-row gap-2 place-items-center m-auto cursor-pointer hover:bg-primary-200 px-2 py-1 rounded-md"
               onClick={() => setConfirmLogout(true)}
             >
               <AiOutlineLogout />

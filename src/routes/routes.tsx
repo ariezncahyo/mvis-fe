@@ -1,11 +1,16 @@
 /* eslint-disable import/no-unused-modules */
 import React from "react";
 import {
-  IoHomeOutline,
-  IoAnalyticsOutline
-} from "react-icons/io5";
+  AiOutlineHome,
+  AiOutlineProfile,
+  AiOutlineLock,
+  AiOutlineFile
+} from "react-icons/ai";
 
 const DashboardPage = React.lazy(()=> import('@/pages/Dashboard'));
+const UserPage = React.lazy(()=> import('@/pages/User'));
+const ChangePasswordPage = React.lazy(()=> import('@/pages/ChangePassword'));
+const PostPage = React.lazy(()=> import('@/pages/Post'));
 
 // Public Route
 const PublicRoute = [
@@ -24,11 +29,32 @@ const PublicRoute = [
 // Internal Route
 const PrivateRoute = [
   {
-    title: "Dashboard",
+    title: "Home",
     element: <DashboardPage />,
     access: "view_dashboard",
     path: "/",
-    icon: <IoHomeOutline/>
+    icon: <AiOutlineHome/>
+  },
+  {
+    title: "User",
+    element: <UserPage />,
+    access: "view_user",
+    path: "/user",
+    icon: <AiOutlineProfile/>
+  },
+  {
+    title: "Change Password",
+    element: <ChangePasswordPage />,
+    access: "view_change_password",
+    path: "/user/change-password",
+    icon: <AiOutlineLock/>
+  },
+  {
+    title: "Post",
+    element: <PostPage />,
+    access: "view_post",
+    path: "/post",
+    icon: <AiOutlineFile/>
   },
 ];
 
