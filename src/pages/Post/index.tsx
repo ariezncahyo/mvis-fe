@@ -58,9 +58,9 @@ export default function Post(): ReactElement {
 
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {
-                  [...Array.from(Array(10).keys())].map(() => {
+                  [...Array.from(Array(10).keys())].map((item, index) => {
                     return (
-                      <div className="w-full border rounded-lg min-h-64 hover:bg-gray-200">
+                      <div key={index} className="w-full border rounded-lg min-h-64 hover:bg-gray-200">
                         <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2">
                           <AiOutlineFileImage className="text-2xl"/>
                         </div>

@@ -1,28 +1,45 @@
 import Layout from "@/components/Layout";
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AiOutlineUser, AiFillLock} from 'react-icons/ai';
 import { ButtonSubmit } from "@/components/Button/ButtonSubmit";
-import { authActions } from "@/store/auth/slices";
+import { userActions } from "@/store/user/slices";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ButtonOk } from "@/components/Button";
 import { ModalConfirm } from "@/components/Modal";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router";
 
 export default function ChangePassword(): ReactElement {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { loading }: any = useAppSelector(state=>state.loading);
+  const { password_changed }: any = useAppSelector(state=> state.user);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [formData, setFormData] = useState<any>({});
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
-  const onSubmit = () => {
-
+  const onSubmit = (data: any) => {
+    setFormData(data);
+    setShowConfirm(true);
   }
 
   const onConfirmEdit = () => {
-    setShowConfirm(true);
+    dispatch(userActions.changePassword(formData));
+    setShowConfirm(false);
   }
+
+  useEffect(() => {
+    if (password_changed === true) {
+      logout().then((res: boolean) => {
+        if (res) navigate(0);
+      });
+    }
+  }, [password_changed]);
 
 	return (
 		<>
@@ -31,7 +48,7 @@ export default function ChangePassword(): ReactElement {
         title="Confirmation"
         text="Are you sure want to update this data?"
         onCancel={() => setShowConfirm(false)}
-        onConfirm={onSubmit}
+        onConfirm={onConfirmEdit}
       />
       <Layout title="Change Password">
         <div className="flex bg-secondary-50">
@@ -76,7 +93,8 @@ export default function ChangePassword(): ReactElement {
                     <div className="flex gap-4">
                       <ButtonOk
                         text='Update'
-                        onClick={onConfirmEdit}
+                        type="submit"
+                        isLoading={loading}
                       />
                     </div>
                   </div>

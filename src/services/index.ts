@@ -3,12 +3,9 @@
 import { AnyObject } from "yup/lib/types";
 import { HttpRequest } from "./http";
 import { LoginBody } from "@/store/auth/types";
+import { TChangePassword } from "@/store/user/types";
 
-/**
- * ===========================================================
- * Auth
- */
-
+// * ===========================================================
 /**
  * User login auth
  * @param body
@@ -19,3 +16,15 @@ export function* login(body: LoginBody) {
   return data;
 }
 
+
+// * ===========================================================
+/**
+ * User
+ * Change Password
+ * @param body
+ * @returns
+ */
+export function* changePassword(body: TChangePassword) {
+  const { data }: AnyObject = yield HttpRequest.put('/user/change-password', {...body});
+  return data;
+}

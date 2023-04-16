@@ -8,6 +8,7 @@ import logger from 'redux-logger';
 import { rootSaga } from '@/store/rootSaga';
 import authReducer from '@/store/auth/slices';
 import loadingReducer from '@/store/loading/slices';
+import userReducer from '@/store/user/slices';
 
 const makeStore = () => {
   const sagaMiddleware = createSagaMiddleware()
@@ -16,6 +17,7 @@ const makeStore = () => {
     reducer: {
       auth: authReducer,
       loading: loadingReducer,
+      user: userReducer,
     },
     devTools: true, // .env
     middleware: getDefaultMiddleware =>
