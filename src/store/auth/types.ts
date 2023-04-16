@@ -5,3 +5,10 @@ export type LoginBody = {
   password: string;
   from?: string
 }
+
+export type TRegister = {
+  name: string;
+  username: string;
+  email: string,
+  password: string,
+}

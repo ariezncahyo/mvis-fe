@@ -2,7 +2,7 @@
 
 import { AnyObject } from "yup/lib/types";
 import { HttpRequest } from "./http";
-import { LoginBody } from "@/store/auth/types";
+import { LoginBody, TRegister } from "@/store/auth/types";
 import { TChangePassword } from "@/store/user/types";
 
 // * ===========================================================
@@ -26,5 +26,16 @@ export function* login(body: LoginBody) {
  */
 export function* changePassword(body: TChangePassword) {
   const { data }: AnyObject = yield HttpRequest.put('/user/change-password', {...body});
+  return data;
+}
+
+/**
+ * User
+ * Register
+ * @param body
+ * @returns
+ */
+export function* register(body: TRegister) {
+  const { data }: AnyObject = yield HttpRequest.post('/auth/register', {...body});
   return data;
 }

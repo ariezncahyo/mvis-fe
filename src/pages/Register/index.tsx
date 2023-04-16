@@ -1,5 +1,5 @@
 // pages/register
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,15 +8,21 @@ import { ButtonSubmit } from "@/components/Button/ButtonSubmit";
 import { authActions } from "@/store/auth/slices";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Link } from "react-router-dom";
+import { Zoom } from "react-toastify";
 
 export default function RegisterPage(): ReactElement {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState<Boolean>(false);
   const { loading }: any = useAppSelector(state=>state.loading);
+  const { newRegister }: any = useAppSelector(state=> state.user);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    console.log(newRegister)
+  }, [newRegister]);
+
   const onSubmit = (data: any) => {
-    dispatch(authActions.login(data));
+    dispatch(authActions.register(data));
   };
 
 	return (
