@@ -1,0 +1,9 @@
+{
+    "editor.tabSize": 2,
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "editor.formatOnSave": true,
+    "prettier.documentSelectors": [
+        "*.{tsx,ts}",
+        "*.{jsx,js}"
+    ]
+}
