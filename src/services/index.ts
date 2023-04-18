@@ -73,3 +73,14 @@ export function* getPost(body: any) {
   const { data }: AnyObject = yield HttpRequest.get('/post', {params: {...body}});
   return data;
 }
+
+/**
+ * Post
+ * Delete Post
+ * @param body
+ * @returns
+ */
+export function* deletePost(post_id: any) {
+  const { data }: AnyObject = yield HttpRequest.delete(`/post/${post_id}`);
+  return data;
+}

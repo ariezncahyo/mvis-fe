@@ -10,8 +10,8 @@ import { Pagination } from "@/components/Pagination";
 import { postActions } from "@/store/post/slices";
 
 export default function Post(): ReactElement {
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [deletePost, setDeletePost] = useState<any>({});
+  const [showModal, setShowModal] = useState<any>(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { loading }: any = useAppSelector(state=>state.loading);
   const { post }: any = useAppSelector(state=>state.post);
@@ -25,7 +25,9 @@ export default function Post(): ReactElement {
 
 
   const onDelete = () => {
-
+    dispatch(postActions.deletePost(deletePost?.public_id));
+    setDeletePost({});
+    dispatch(postActions.getPost(filter));
   }
 
   const onSubmit = () => {
@@ -41,10 +43,13 @@ export default function Post(): ReactElement {
         onConfirm={onSubmit}
       />
       <ModalConfirm
-        showForm={showConfirmDelete}
+        showForm={deletePost?.show === true}
         title="Delete Post"
         text="Are you sure want to delete this data?"
-        onCancel={() => setShowConfirmDelete(false)}
+        onCancel={() => setDeletePost({
+          ...deletePost,
+          show: false
+        })}
         onConfirm={onDelete}
       />
       <Layout title="Post">
@@ -90,7 +95,11 @@ export default function Post(): ReactElement {
                             </div>
                             <div className="flex flex-col gap-1">
                               <div className="text-xs bg-red-400 p-0 px-1 rounded-md text-white text-center hover:bg-red-700 cursor-pointer"
-                                onClick={()=> setShowConfirmDelete(true)}
+                                onClick={()=> setDeletePost({
+                                  ...deletePost,
+                                  show: true,
+                                  ...item
+                                })}
                               >Delete</div>
                               <div className="text-xs bg-primary-400 p-0 px-1 rounded-md text-white text-center hover:bg-primary-700 cursor-pointer"
                                 onClick={()=> setShowModal(true)}

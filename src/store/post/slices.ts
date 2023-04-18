@@ -27,6 +27,7 @@ export const postSlice = createSlice({
 export const postActions = {
   getPost: createAction(`${postSlice.name}/getPost`),
   setPost: postSlice.actions.setPost,
+  deletePost: createAction(`${postSlice.name}/deletePost`),
 }
 
 // Selectors
