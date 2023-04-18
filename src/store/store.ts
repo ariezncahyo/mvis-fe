@@ -9,6 +9,7 @@ import { rootSaga } from '@/store/rootSaga';
 import authReducer from '@/store/auth/slices';
 import loadingReducer from '@/store/loading/slices';
 import userReducer from '@/store/user/slices';
+import postReducer from '@/store/post/slices';
 
 const makeStore = () => {
   const sagaMiddleware = createSagaMiddleware()
@@ -18,6 +19,7 @@ const makeStore = () => {
       auth: authReducer,
       loading: loadingReducer,
       user: userReducer,
+      post: postReducer,
     },
     devTools: true, // .env
     middleware: getDefaultMiddleware =>

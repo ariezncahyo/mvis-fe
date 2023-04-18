@@ -2,13 +2,16 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from "@/store/store";
+import { toast } from "react-toastify";
 
 export interface LoadingState {
-  loadingActions: string[]
+  loadingActions: string[],
+  messages: any
 }
 
 const initialState: LoadingState = {
   loadingActions: [],
+  messages: null
 }
 
 // Slice
@@ -32,7 +35,10 @@ export const loadingSlice = createSlice({
       loadingActions: state.loadingActions.filter(
         (item) => item !== action.payload
       ),
-    })
+    }),
+    showMessage: (state, action) => {
+      //
+    },
   }
 });
 
@@ -40,6 +46,7 @@ export const loadingSlice = createSlice({
 export const loadingActions = {
   startLoadingAction: loadingSlice.actions.startLoadingAction,
   stopLoadingAction: loadingSlice.actions.stopLoadingAction,
+  showMessage: loadingSlice.actions.showMessage
 }
 
 // Selectors

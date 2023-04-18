@@ -1,27 +1,72 @@
 import Layout from "@/components/Layout";
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect, useRef } from 'react';
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AiOutlineUser, AiFillLock} from 'react-icons/ai';
+import { AiFillFileImage } from 'react-icons/ai';
 import { ButtonSubmit } from "@/components/Button/ButtonSubmit";
-import { authActions } from "@/store/auth/slices";
+import { userActions } from "@/store/user/slices";
+import { loadingActions } from "@/store/loading/slices";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ButtonOk } from "@/components/Button";
+import { ButtonOk, ButtonCancel } from "@/components/Button";
 import { ModalConfirm } from "@/components/Modal";
+import path from "path";
 
 export default function User(): ReactElement {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { loading }: any = useAppSelector(state=>state.loading);
+  const { user }: any = useAppSelector(state=>state.user);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [ formEnabled, setFormEnabled ] = useState(false);
   const dispatch = useAppDispatch();
 
-  const onSubmit = () => {
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    dispatch(userActions.getUser());
+  }, []);
+
+  useEffect(() => {
+    console.log(user)
+    reset({
+      ...user
+    });
+  }, [user, dispatch]);
+
+  const onSubmit = (data: any) => {
+
+    // dispatch(userActions.updateUser(data));
   }
 
   const onConfirmEdit = () => {
     setShowConfirm(true);
+  }
+
+  const onImageInputChange = async (e: any) => {
+    e.preventDefault();
+
+    // dispatch(loadingActions.showMessage({type: 'success', message: 'Hello'}))
+
+    var file = e.target?.files ? e.target.files[0] : null;
+		if (!file) {
+		  return;
+		}
+
+		const { name, type, size } = file;
+
+		if (!type?.startsWith("image/")) {
+		  dispatch(loadingActions.showMessage({type: 'error', message: 'Only image file is supported'}))
+		}
+
+		const ext = path.extname(name);
+		if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+      dispatch(loadingActions.showMessage({ type: 'error', message: 'Only .png, .jpg, and .jpeg image are supported' }))
+		}
+
+		if (size > 1000000) {
+		  dispatch(loadingActions.showMessage({ type: 'error', message: 'Max file size is 1 mb' }))
+		}
+
   }
 
 	return (
@@ -35,6 +80,13 @@ export default function User(): ReactElement {
       />
       <Layout title="User">
         <div className="flex bg-secondary-50">
+          <input
+            type="file"
+            className="hidden"
+            ref={imageInputRef}
+            onChange={onImageInputChange}
+          />
+
           <div className="text-2xl w-full">
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -46,7 +98,9 @@ export default function User(): ReactElement {
                     <div className="flex items-center rounded-lg border border-gray-300 w-full bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
                       <input
                         id="name"
-                        className="rounded-lg border-transparent flex-1 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 text-base focus:outline-none"
+                        className={`rounded-lg border-transparent flex-1 w-full py-2 px-4 text-gray-700 placeholder-gray-400 text-base focus:outline-none
+                          ${!formEnabled && 'bg-gray-200 pointer-events-none'}
+                        `}
                         type="text"
                         placeholder="Name"
                         {...register('name', { required: true })}
@@ -55,7 +109,9 @@ export default function User(): ReactElement {
                     <div className="flex items-center rounded-lg border border-gray-300 w-full bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
                       <input
                         id="username"
-                        className="rounded-lg border-transparent flex-1 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 text-base focus:outline-none"
+                        className={`rounded-lg border-transparent flex-1 w-full py-2 px-4 text-gray-700 placeholder-gray-400 text-base focus:outline-none
+                          ${!formEnabled && 'bg-gray-200 pointer-events-none'}
+                        `}
                         type="text"
                         placeholder="Username"
                         {...register('username', { required: true })}
@@ -64,30 +120,44 @@ export default function User(): ReactElement {
                     <div className="flex items-center rounded-lg border border-gray-300 w-full bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
                       <input
                         id="email"
-                        className="rounded-lg border-transparent flex-1 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 text-base focus:outline-none"
+                        className={`rounded-lg border-transparent flex-1 w-full py-2 px-4 text-gray-700 placeholder-gray-400 text-base focus:outline-none
+                          ${!formEnabled && 'bg-gray-200 pointer-events-none'}
+                        `}
                         type="text"
                         placeholder="Email"
                         {...register('email', { required: true })}
                       />
                     </div>
-                    <div className="flex items-center rounded-lg border border-gray-300 w-full bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
+                    <div className={`flex items-center rounded-lg border border-gray-300 w-full bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600
+                      ${!formEnabled && 'bg-gray-200 pointer-events-none'}
+                    `}>
                       <div className="flex gap-2 m-4 w-full">
-                        <div className="text-sm w-full overflow-hidden">Chose files</div>
-                        <div className="flex text-sm text-right cursor-pointer text-blue-500 hover:text-blue-800">
+                        <div className="text-sm w-full overflow-hidden">
+                          <p>Chose files</p>
+                          <p className="text-xs font-thin italic">(jpg,jpeg,png)</p>
+                        </div>
+                        <div className="flex text-sm text-right cursor-pointer text-blue-500 hover:text-blue-800 items-center"
+                          onClick={() => imageInputRef?.current?.click()}
+                        >
                           Browse
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center rounded-lg border border-gray-300 w-28 h-28 bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
-
+                      <div className="flex w-full h-full bg-white justify-center items-center rounded-sm">
+                        <AiFillFileImage/>
+                      </div>
                     </div>
                     <div className="flex gap-4">
-                      <ButtonOk
-                        text='Edit'
+                      <ButtonCancel
+                        text={`${formEnabled ? 'Cancel' : 'Edit'}`}
+                        onClick={()=> setFormEnabled(formEnabled ? false : true )}
                       />
                       <ButtonOk
                         text='Submit'
-                        onClick={onConfirmEdit}
+                        type="submit"
+                        className={`w-full text-white  bg-gradient-to-bl from-primary-400 to-primary-500 focus:ring-2 ring-1 focus:bg-white ring-primary-500 focus:outline-2 focus:ring-primary-600 dark:focus:ring-primary-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2
+                        ${!formEnabled && 'bg-gray-200 pointer-events-none from-gray-400 to-gray-500'}`}
                       />
                     </div>
                   </div>
