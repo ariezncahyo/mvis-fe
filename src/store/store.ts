@@ -2,7 +2,6 @@
 
 import createSagaMiddleware from '@redux-saga/core';
 import { configureStore } from '@reduxjs/toolkit';
-import { createBrowserHistory } from 'history';
 import logger from 'redux-logger';
 
 import { rootSaga } from '@/store/rootSaga';
@@ -23,7 +22,7 @@ const makeStore = () => {
     },
     devTools: true, // .env
     middleware: getDefaultMiddleware =>
-      getDefaultMiddleware({ thunk: false })
+      getDefaultMiddleware({ thunk: false, serializableCheck: false })
         .concat(sagaMiddleware)
         // .concat(routerMiddleware)
         // .concat(logger),
