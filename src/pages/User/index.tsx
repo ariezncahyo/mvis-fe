@@ -156,8 +156,8 @@ export default function User(): ReactElement {
                     <div className="flex items-center rounded-lg border border-gray-300 w-28 h-28 bg-white shadow-sm focus-within:border-indigo-600 focus-within:ring-1 ring-indigo-600">
                       <div className="flex w-full h-full bg-white justify-center items-center rounded-sm">
                         {
-                          formData?.image ? (
-                            <img src={formData?.image} alt={formData?.name} className="object-cover"/>
+                          formData?.photo ? (
+                            <img src={formData?.photo} alt={formData?.name} className="object-cover"/>
                           ) : (<AiOutlineFileImage className="text-2xl"/>)
                         }
                       </div>

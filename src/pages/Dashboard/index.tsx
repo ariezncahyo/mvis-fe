@@ -19,7 +19,7 @@ export default function Dashboard(): ReactElement {
 
   useEffect(() => {
     dispatch(postActions.getPost(filter));
-  }, [filter]);
+  }, [filter?.page, filter?.limit]);
 
 	return (
 		<Layout title="Post">
@@ -47,10 +47,10 @@ export default function Dashboard(): ReactElement {
                   post?.data?.rows && post?.data?.rows.map((item: any, index: any) => {
                     return (
                       <div key={index} className="w-full border rounded-lg min-h-64 hover:bg-gray-200">
-                        <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2">
+                        <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2 overflow-hidden">
                           {
                             item?.image ? (
-                              <img src={item?.image}/>
+                              <img src={item?.image} alt={item?.name} className="object-cover w-full h-full"/>
                             ) : (<AiOutlineFileImage className="text-2xl"/>)
                           }
                         </div>
@@ -75,7 +75,7 @@ export default function Dashboard(): ReactElement {
               </div>
             </div>
           </div>
-          <Pagination/>
+          <Pagination pagination={post?.pagination} filter={filter} setFilter={setFilter}/>
         </div>
       </Layout>
 	)

@@ -116,7 +116,7 @@ export default function Post(): ReactElement {
                         <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2 overflow-hidden">
                           {
                             item?.image ? (
-                              <img src={item?.image} alt={item?.name} className="object-cover"/>
+                              <img src={item?.image} alt={item?.name} className="object-cover w-full h-full"/>
                             ) : (<AiOutlineFileImage className="text-2xl"/>)
                           }
                         </div>
@@ -156,7 +156,7 @@ export default function Post(): ReactElement {
                 }
               </div>
             </div>
-            <Pagination/>
+            <Pagination pagination={post?.pagination} filter={filter} setFilter={setFilter}/>
           </div>
           <div className="fixed bottom-0 right-0 w-16 h-16 mr-12 mb-8 cursor-pointer">
             <div className="flex bg-primary-500 w-12 h-12 rounded-full justify-items-center justify-center place-content-center items-center text-white font-bold cursor-pointer hover:bg-primary-700">
