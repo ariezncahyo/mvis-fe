@@ -71,7 +71,7 @@ export default function Post(): ReactElement {
 		<>
       <ModalPost
         showForm={formData?.show === true}
-        title="Edit Post"
+        title={`${formData?.public_id ? 'Edit Post' : 'Create Post'}`}
         onCancel={() => setFormData({})}
         onConfirm={onSubmit}
         formData={formData}

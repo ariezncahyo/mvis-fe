@@ -25,7 +25,7 @@ const Pagination = ({ pagination, filter, setFilter }: PropsSwitch) => {
         >{`Prev`}</div>
         <div className="flex gap-2">
           {
-            [...Array.from(Array(total_page).keys())].map((item, index) => {
+            [...Array.from(Array(total_page || 0).keys())].map((item, index) => {
               let pages = item+1;
               return (
                 <div key={index} className="flex text-white hover:bg-primary-700 bg-primary-500 p-1 w-8 items-center justify-center rounded-full cursor-pointer"
