@@ -4,7 +4,7 @@ import { AnyObject } from "yup/lib/types";
 import { HttpRequest } from "./http";
 import { LoginBody, TRegister } from "@/store/auth/types";
 import { TChangePassword } from "@/store/user/types";
-import { TPost } from "@/store/post/types";
+import { createFormData } from "@/utils/utility";
 
 // * ===========================================================
 /**
@@ -82,5 +82,66 @@ export function* getPost(body: any) {
  */
 export function* deletePost(post_id: any) {
   const { data }: AnyObject = yield HttpRequest.delete(`/post/${post_id}`);
+  return data;
+}
+
+/**
+ * Post
+ * Upload File
+ * @param body
+ * @returns
+ */
+export function* uploadFile(body: any) {
+  if (body?.file || !body?.public_id) {
+    let { data }: AnyObject = yield HttpRequest.post(`/file`, createFormData({ image: body.file }),  {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return {
+      data: {
+        ...body,
+        image: data?.data?.url
+      }
+    };
+  } else {
+    return {
+      data:{
+        ...body
+      }
+    }
+  }
+}
+
+
+
+/**
+ * Post
+ * Update Post
+ * @param body
+ * @returns
+ */
+export function* updatePost(body: any) {
+  let payload = {
+    image: body?.data?.image,
+    caption: body?.data?.caption,
+    tags: body?.data?.tags,
+  }
+  let { public_id } = body?.data;
+  const { data }: AnyObject = yield HttpRequest.put(`/post/${public_id}`, {...payload});
+  return data;
+}
+
+/**
+ * Post
+ * Create Post
+ * @param body
+ * @returns
+ */
+export function* createPost(body: any) {
+  let payload = {
+    image: body?.data?.image,
+    caption: body?.data?.caption,
+    tags: body?.data?.tags,
+  }
+  const { data }: AnyObject = yield HttpRequest.post(`/post`, {...payload});
   return data;
 }

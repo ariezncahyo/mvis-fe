@@ -8,7 +8,13 @@ import { TPost } from "@/store/post/types";
 
 import { postActions } from '@/store/post/slices';
 import { loadingActions } from "../loading/slices";
-import { getPost, deletePost } from "@/services/index";
+import {
+  getPost,
+  deletePost,
+  uploadFile,
+  updatePost,
+  createPost
+} from "@/services/index";
 
 // Worker Sagas
 export function* getPostSaga(
@@ -39,10 +45,44 @@ export function* deletePostSaga(
   }
 }
 
+export function* updatePostSaga(
+  action: PayloadAction<any>
+): SagaIterator {
+  try {
+    yield put(loadingActions.startLoadingAction(action.type));
+    let result : any = yield call(uploadFile, action.payload);
+    let { message } = yield call(updatePost, result);
+    let { data } = yield call(getPost, {});
+    yield put(postActions.setPost(data));
+    toast.success(message);
+  } catch {}
+  finally {
+    yield put(loadingActions.stopLoadingAction(action.type));
+  }
+}
+
+export function* createPostSaga(
+  action: PayloadAction<any>
+): SagaIterator {
+  try {
+    yield put(loadingActions.startLoadingAction(action.type));
+    let result : any = yield call(uploadFile, action.payload);
+    let { message } = yield call(createPost, result);
+    let { data } = yield call(getPost, {});
+    yield put(postActions.setPost(data));
+    toast.success(message);
+  } catch {}
+  finally {
+    yield put(loadingActions.stopLoadingAction(action.type));
+  }
+}
+
 // Watcher Saga
 export function* postWatcherSaga(): SagaIterator {
   yield takeEvery(postActions.getPost.type, getPostSaga);
   yield takeEvery(postActions.deletePost.type, deletePostSaga);
+  yield takeEvery(postActions.updatePost.type, updatePostSaga);
+  yield takeEvery(postActions.createPost.type, createPostSaga);
 }
 
 export default postWatcherSaga;

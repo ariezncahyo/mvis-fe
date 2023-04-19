@@ -8,10 +8,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ModalConfirm, ModalPost } from "@/components/Modal";
 import { Pagination } from "@/components/Pagination";
 import { postActions } from "@/store/post/slices";
+import { loadingActions } from "@/store/loading/slices";
+import { readFileBase64 } from "utils/utility";
 
 export default function Post(): ReactElement {
   const [deletePost, setDeletePost] = useState<any>({});
-  const [showModal, setShowModal] = useState<any>(false);
+  const [formData, setFormData] = useState<any>({});
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { loading }: any = useAppSelector(state=>state.loading);
   const { post }: any = useAppSelector(state=>state.post);
@@ -31,16 +33,50 @@ export default function Post(): ReactElement {
   }
 
   const onSubmit = () => {
+    if (formData?.public_id) {
+      dispatch(postActions.updatePost(formData));
+    } else {
+      dispatch(postActions.createPost(formData));
+    }
+    setFormData({});
+  }
 
+  const onImageInputChange = async (e: any) => {
+    e.preventDefault();
+
+    var file = e.target?.files ? e.target.files[0] : null;
+		if (!file) {
+		  return;
+		}
+
+		const { size } = file;
+
+		if (size > 1000000) {
+		  dispatch(loadingActions.showMessage({ type: 'error', message: 'Max file size is 1 mb' }))
+		}
+
+    try {
+      const imgData = await readFileBase64(file);
+      setFormData({
+        ...formData,
+        image: imgData,
+        file
+      });
+    } catch(err) {
+      dispatch(loadingActions.showMessage({ type: 'error', message: 'Error image' }))
+    }
   }
 
 	return (
 		<>
       <ModalPost
-        showForm={showModal}
+        showForm={formData?.show === true}
         title="Edit Post"
-        onCancel={() => setShowModal(false)}
+        onCancel={() => setFormData({})}
         onConfirm={onSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        onImageInputChange={onImageInputChange}
       />
       <ModalConfirm
         showForm={deletePost?.show === true}
@@ -77,10 +113,10 @@ export default function Post(): ReactElement {
                   post?.data?.rows && post?.data?.rows.map((item: any, index: any) => {
                     return (
                       <div key={index} className="w-full border rounded-lg min-h-64 hover:bg-gray-200">
-                        <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2">
+                        <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2 overflow-hidden">
                           {
                             item?.image ? (
-                              <img src={item?.image}/>
+                              <img src={item?.image} alt={item?.name} className="object-cover"/>
                             ) : (<AiOutlineFileImage className="text-2xl"/>)
                           }
                         </div>
@@ -102,7 +138,11 @@ export default function Post(): ReactElement {
                                 })}
                               >Delete</div>
                               <div className="text-xs bg-primary-400 p-0 px-1 rounded-md text-white text-center hover:bg-primary-700 cursor-pointer"
-                                onClick={()=> setShowModal(true)}
+                                onClick={()=> setFormData({
+                                  ...formData,
+                                  ...item,
+                                  show: true
+                                })}
                               >Edit</div>
                             </div>
                           </div>
@@ -120,7 +160,15 @@ export default function Post(): ReactElement {
           </div>
           <div className="fixed bottom-0 right-0 w-16 h-16 mr-12 mb-8 cursor-pointer">
             <div className="flex bg-primary-500 w-12 h-12 rounded-full justify-items-center justify-center place-content-center items-center text-white font-bold cursor-pointer hover:bg-primary-700">
-              <AiOutlinePlus className="text-2xl"/>
+              <AiOutlinePlus className="text-2xl"
+                onClick={()=> setFormData({
+                  ...formData,
+                  show: true,
+                  tags: '',
+                  caption: '',
+                  image: ''
+                })}
+              />
             </div>
           </div>
         </div>
