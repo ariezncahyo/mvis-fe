@@ -8,7 +8,7 @@ import { TChangePassword, TUser } from "@/store/user/types";
 
 import { userActions } from '@/store/user/slices';
 import { loadingActions } from "../loading/slices";
-import { changePassword, getUser, updateUser } from "@/services/index";
+import { changePassword, getUser, updateUser, uploadFile } from "@/services/index";
 
 // Worker Sagas
 export function* changePasswordSaga(
@@ -43,10 +43,14 @@ export function* updateUserSaga(
 ): SagaIterator {
   try {
     yield put(loadingActions.startLoadingAction(action.type));
-    console.log("saa")
-    const { data , message} = yield call(updateUser, action.payload);
-    console.log(data)
-    // yield put(userActions.getUserSuccess(data));
+    let body = {
+      ...action.payload,
+      image: action.payload.photo,
+    }
+    let result : any = yield call(uploadFile, body);
+    const { data, message } = yield call(updateUser, result);
+    yield put(userActions.updateUserSuccess(data));
+    toast.success(message);
   } catch {}
   finally {
     yield put(loadingActions.stopLoadingAction(action.type));

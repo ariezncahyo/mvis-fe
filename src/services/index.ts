@@ -57,7 +57,11 @@ export function* getUser() {
  * @returns
  */
 export function* updateUser(body: any) {
-  const { data }: AnyObject = yield HttpRequest.put('/user', ...body);
+  let payload = {
+    ...body?.data,
+    photo: body?.data?.image
+  }
+  const { data }: AnyObject = yield HttpRequest.put('/user', {...payload});
   return data;
 }
 
