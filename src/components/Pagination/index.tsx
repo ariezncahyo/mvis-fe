@@ -28,7 +28,9 @@ const Pagination = ({ pagination, filter, setFilter }: PropsSwitch) => {
             [...Array.from(Array(total_page || 0).keys())].map((item, index) => {
               let pages = item+1;
               return (
-                <div key={index} className="flex text-white hover:bg-primary-700 bg-primary-500 p-1 w-8 items-center justify-center rounded-full cursor-pointer"
+                <div key={index} className={`flex text-white hover:bg-primary-700 bg-primary-500 p-1 w-8 items-center justify-center rounded-full cursor-pointer border-2 border-primary-500
+                  ${pages == page ? 'border-2 border-yellow-500 text-yellow-500' : ''}
+                `}
                   onClick={()=> setFilter({
                     ...filter,
                     page: pages

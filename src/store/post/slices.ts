@@ -30,6 +30,8 @@ export const postActions = {
   deletePost: createAction(`${postSlice.name}/deletePost`),
   updatePost: createAction(`${postSlice.name}/updatePost`),
   createPost: createAction(`${postSlice.name}/createPost`),
+  likePost: createAction(`${postSlice.name}/likePost`),
+  unlikePost: createAction(`${postSlice.name}/unlikePost`),
 }
 
 // Selectors

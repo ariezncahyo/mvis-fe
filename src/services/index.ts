@@ -149,3 +149,26 @@ export function* createPost(body: any) {
   const { data }: AnyObject = yield HttpRequest.post(`/post`, {...payload});
   return data;
 }
+
+/**
+ * Post
+ * Like Post
+ * @param body
+ * @returns
+ */
+export function* likePost(payload: any) {
+  const { data }: AnyObject = yield HttpRequest.put(`/post/like/${payload?.post_id}`);
+  return data;
+}
+
+/**
+ * Post
+ * UnLike Post
+ * @param body
+ * @returns
+ */
+export function* unlikePost(payload: any) {
+  const { data }: AnyObject = yield HttpRequest.put(`/post/unlike/${payload?.post_id}`);
+  console.log(data)
+  return data;
+}

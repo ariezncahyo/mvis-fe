@@ -3,7 +3,12 @@ import type { ReactElement } from 'react';
 import { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AiOutlineSearch, AiOutlineFileImage, AiOutlinePlus, AiOutlineHeart } from 'react-icons/ai';
+import {
+  AiOutlineSearch,
+  AiOutlineFileImage,
+  AiOutlineHeart,
+  AiFillHeart
+} from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Pagination } from "@/components/Pagination";
 import { postActions } from "@/store/post/slices";
@@ -20,6 +25,20 @@ export default function Dashboard(): ReactElement {
   useEffect(() => {
     dispatch(postActions.getPost(filter));
   }, [filter?.page, filter?.limit]);
+
+  const handleChangeLiked = ({post_id, liked}: any) => {
+    let payload: any = {
+      pagination: post?.pagination,
+      post_id
+    }
+    if (liked > 0) {
+      dispatch(postActions.unlikePost(payload));
+    } else {
+      dispatch(postActions.likePost(payload));
+    }
+  }
+
+  let user_active = post?.data?.user_active;
 
 	return (
 		<Layout title="Post">
@@ -45,6 +64,8 @@ export default function Dashboard(): ReactElement {
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {
                   post?.data?.rows && post?.data?.rows.map((item: any, index: any) => {
+                    let liked = item?.user_likeds?.filter((value: any) =>value.user_id == user_active).length;
+
                     return (
                       <div key={index} className="w-full border rounded-lg min-h-64 hover:bg-gray-200">
                         <div className="flex w-full h-48 place-content-center justify-center items-center border-b-2 overflow-hidden">
@@ -55,8 +76,17 @@ export default function Dashboard(): ReactElement {
                           }
                         </div>
                         <div className="flex flex-col p-1">
-                          <div className="flex gap-2 items-center">
-                            <AiOutlineHeart className="text-2xl cursor-pointer"/><span className="text-sm">{item?.likes}</span>
+                          <div className="flex gap-2 items-center"
+                            onClick={()=> handleChangeLiked({ post_id: item?.public_id, liked: liked })}
+                          >
+                            {
+                              liked > 0 ? (
+                                <AiFillHeart className="text-2xl cursor-pointer text-red-500"/>
+                              ) : (
+                                <AiOutlineHeart className="text-2xl cursor-pointer"/>
+                              )
+                            }
+                            <span className="text-sm">{item?.likes}</span>
                           </div>
                           <div className="flex gap-2 w-full">
                             <div className="flex flex-col w-full">
