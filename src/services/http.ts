@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { store } from '@/store/store';
 import { useAuth } from '@/hooks/useAuth';
 
-const BASE_URL = "http://localhost:9000";
+const BASE_URL = import.meta.env.MODE == 'development' ? "http://localhost:9000" : 'https://api.ariezncahyo.my.id';
 
 type IConfig = AxiosRequestConfig & {
   showError?: boolean;
